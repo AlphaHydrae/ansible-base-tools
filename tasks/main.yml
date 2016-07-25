@@ -1,0 +1,41 @@
+# Yum
+- name: Install base tools (yum)
+  yum: pkg={{ item }} state=latest
+  with_items:
+    - curl
+    - gcc
+    - gcc-c++
+    - make
+    - rsync
+    - wget
+  when: ansible_pkg_mgr == 'yum'
+
+# Aptitude
+- name: Install base tools (aptitude)
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - build-essential
+    - curl
+    - rsync
+    - wget
+  when: ansible_pkg_mgr == 'apt'
+
+# MacPorts
+- name: Install base tools (MacPorts)
+  macports: name={{ item }} state=installed
+  with_items:
+    - curl
+    - rsync
+    - wget
+  when: ansible_pkg_mgr == 'macports'
+
+# Homebrew
+- name: Install base tools (Homebrew)
+  homebrew: name={{ item }} state=installed
+  become: true
+  become_user: "{{ user }}"
+  with_items:
+    - curl
+    - rsync
+    - wget
+  when: ansible_pkg_mgr == 'homebrew'
