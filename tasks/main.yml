@@ -1,6 +1,8 @@
+---
+
 # Yum
-- name: Install base tools (yum)
-  yum: pkg={{ item }} state=latest
+- name: Install base tools (Yum)
+  yum: pkg={{ item }} state=present
   with_items:
     - curl
     - gcc
@@ -11,8 +13,8 @@
   when: ansible_pkg_mgr == 'yum'
 
 # Aptitude
-- name: Install base tools (aptitude)
-  apt: pkg={{ item }} state=latest
+- name: Install base tools (Aptitude)
+  apt: pkg={{ item }} state=present
   with_items:
     - build-essential
     - curl
@@ -20,22 +22,17 @@
     - wget
   when: ansible_pkg_mgr == 'apt'
 
-# MacPorts
-- name: Install base tools (MacPorts)
-  macports: name={{ item }} state=installed
-  with_items:
-    - curl
-    - rsync
-    - wget
-  when: ansible_pkg_mgr == 'macports'
-
 # Homebrew
 - name: Install base tools (Homebrew)
-  homebrew: name={{ item }} state=installed
+  homebrew: name={{ item }} state=present
   become: true
-  become_user: "{{ user }}"
+  become_user: "{{ base_tools_homebrew_user }}"
   with_items:
     - curl
     - rsync
     - wget
   when: ansible_pkg_mgr == 'homebrew'
+
+# Other package managers
+- fail: msg="{{ ansible_pkg_mgr }} is not a supported package manager (Aptitude, Homebrew or Yum are supported)"
+  when: ansible_pkg_mgr != 'yum' and ansible_pkg_mgr != 'apt' and ansible_pkg_mgr != 'homebrew'
