@@ -2,35 +2,38 @@
 
 # Yum
 - name: Install base tools (Yum)
-  yum: pkg={{ item }} state=present
-  with_items:
-    - curl
-    - gcc
-    - gcc-c++
-    - make
-    - rsync
-    - wget
+  yum:
+    name:
+      - curl
+      - gcc
+      - gcc-c++
+      - make
+      - rsync
+      - wget
+    state: present
   when: ansible_pkg_mgr == 'yum'
 
 # Aptitude
 - name: Install base tools (Aptitude)
-  apt: pkg={{ item }} state=present
-  with_items:
-    - build-essential
-    - curl
-    - rsync
-    - wget
+  apt:
+    name:
+      - build-essential
+      - curl
+      - rsync
+      - wget
+    state: present
   when: ansible_pkg_mgr == 'apt'
 
 # Homebrew
 - name: Install base tools (Homebrew)
-  homebrew: name={{ item }} state=present
+  homebrew:
+    name:
+      - curl
+      - rsync
+      - wget
+    state: present
   become: true
   become_user: "{{ base_tools_homebrew_user }}"
-  with_items:
-    - curl
-    - rsync
-    - wget
   when: ansible_pkg_mgr == 'homebrew'
 
 # Other package managers
